@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
-
 const Filter = (props) => {
 	return (
 		<div>
@@ -26,11 +25,16 @@ const PersonForm = (props) => {
 	)
 }
 
+
 const Persons = (props) => {
 	return (
 		<div>
 			{props.persons.map(person => (
-				<p key={person.id} >{person.name} {person.number}</p>
+				<p key={person.id} >{person.name} {person.number} 
+					<button type="button" onClick={()=> props.removePerson(person.id)}>
+						delete
+					</button>
+				</p>
 			))}
 		</div>
 	)
@@ -82,11 +86,24 @@ const App = () => {
 			promise.then(response => {
 				setPersons(persons.concat(response.data))
 			})
-			
+
 		}
 
 		setNewName('')
 		setNewNumber('')
+	}
+
+	const removePerson = (id) => {
+		const personToDelete = persons.find(person => person.id === id)
+		const confirmDelete = window.confirm(`Delete ${personToDelete.name} ?`)
+
+		if(confirmDelete) { 
+			const promise = personService.removePerson(id)
+		
+			promise.then(() => {
+				setPersons(persons.filter(person => person.id !== id))
+			})
+		}
 	}
 
 	const filterPersonsToShow = persons.filter(person =>
@@ -107,7 +124,8 @@ const App = () => {
 				handleNumberChange={handleNumberChange} />
 			<h3>Numbers</h3>
 			<Persons
-				persons={filterPersonsToShow} />
+				persons={filterPersonsToShow}
+				removePerson={removePerson} />
 		</div>
 	)
 }
