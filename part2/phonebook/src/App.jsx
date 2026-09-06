@@ -30,8 +30,8 @@ const Persons = (props) => {
 	return (
 		<div>
 			{props.persons.map(person => (
-				<p key={person.id} >{person.name} {person.number} 
-					<button type="button" onClick={()=> props.removePerson(person.id)}>
+				<p key={person.id} >{person.name} {person.number}
+					<button type="button" onClick={() => props.removePerson(person.id)}>
 						delete
 					</button>
 				</p>
@@ -77,8 +77,31 @@ const App = () => {
 			number: newNumber
 		}
 
-		if (persons.some(person => person.name === newName)) {
-			alert(`${newName} is already added to phonebook`)
+		const foundPerson = persons.find(person => person.name === newName)
+		if (foundPerson) {
+			const confirmReplace = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+
+			if (confirmReplace) {
+				const updatedPerson = {
+					...foundPerson,
+					number: newNumber
+				}
+
+				const promise = personService.updatePerson(
+					foundPerson.id,
+					updatedPerson
+				)
+
+				promise.then(response => {
+					setPersons(
+						persons.map(person =>
+							person.id !== foundPerson.id
+								? person
+								: response.data
+						)
+					)
+				})
+			}
 		}
 		else {
 			const promise = personService.create(personObject)
@@ -97,9 +120,9 @@ const App = () => {
 		const personToDelete = persons.find(person => person.id === id)
 		const confirmDelete = window.confirm(`Delete ${personToDelete.name} ?`)
 
-		if(confirmDelete) { 
+		if (confirmDelete) {
 			const promise = personService.removePerson(id)
-		
+
 			promise.then(() => {
 				setPersons(persons.filter(person => person.id !== id))
 			})
