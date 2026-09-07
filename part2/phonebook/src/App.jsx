@@ -40,13 +40,25 @@ const Persons = (props) => {
 	)
 }
 
-const Notification = ({message}) => {
-	if(message === null) {
+const Notification = ({ message }) => {
+	if (message === null) {
 		return null
 	}
 
-	return(
+	return (
 		<div className="message">
+			{message}
+		</div>
+	)
+}
+
+const ErrorMessage = ({ message }) => {
+	if (message === null) {
+		return null
+	}
+
+	return (
+		<div className="errorMessage" >
 			{message}
 		</div>
 	)
@@ -59,6 +71,7 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState('')
 	const [filter, setFilter] = useState('')
 	const [notification, setNotification] = useState(null)
+	const [errorMessage, setErrorMessage] = useState(null)
 
 	const handleNameChange = (event) => {
 		setNewName(event.target.value)
@@ -119,6 +132,18 @@ const App = () => {
 						setNotification(null)
 					}, 5000)
 				})
+
+					.catch(() => {
+						setErrorMessage(`Information of ${foundPerson.name} has already been removed from the server`)
+
+						setPersons(
+							persons.filter(person => person.id !== foundPerson.id)
+						)
+
+						setTimeout(() => {
+							setErrorMessage(null)
+						}, 5000)
+					})
 			}
 		}
 		else {
@@ -148,6 +173,11 @@ const App = () => {
 
 			promise.then(() => {
 				setPersons(persons.filter(person => person.id !== id))
+				setNotification(`Information of ${personToDelete.name} has been removed from the server`)
+
+				setTimeout(() => {
+					setNotification(null)
+				}, 5000)
 			})
 		}
 	}
@@ -160,6 +190,8 @@ const App = () => {
 			<h2>Phonebook</h2>
 			<Notification
 				message={notification} />
+			<ErrorMessage
+				message={errorMessage} />
 			<Filter
 				filter={filter}
 				handleFilterChange={handleFilterChange} />
