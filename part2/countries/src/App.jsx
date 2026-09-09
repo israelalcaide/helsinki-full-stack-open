@@ -11,6 +11,10 @@ const App = () => {
 		setSearch(event.target.value)
 	}
 
+	const handleShow = (country) => {
+		setSearch(country.name.common)
+	}
+
 
 	useEffect(() => {
 		axios.get('https://studies.cs.helsinki.fi/restcountries/api/all')
@@ -40,6 +44,8 @@ const App = () => {
 				filteredCountries.map(country => (
 					<p key={country.cca3}>
 						{country.name.common}
+						{' '}
+						<button onClick={() => handleShow(country)}>Show</button>
 					</p>
 				))
 			}
@@ -62,7 +68,7 @@ const App = () => {
 
 					<img
 						src={filteredCountries[0].flags.png}
-						alt={`Flag of ${filteredCountries[0].name.common}`}/>
+						alt={`Flag of ${filteredCountries[0].name.common}`} />
 				</div>
 			)}
 		</div>
