@@ -64,6 +64,18 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
 	const body = request.body
+
+	if (!body.name || !body.number) {
+		return response.status(400).json(
+			{ error: 'Name or Number are missing'})
+	}
+
+	if (persons.some(person => person.name === body.name)) {
+		return response.status(400).json(
+			{ error: 'name must be unique'}
+		)
+	}
+
 	const randomId = String(Math.floor(Math.random() * 10000))
 
 	const person = {
@@ -71,12 +83,13 @@ app.post('/api/persons', (request, response) => {
 		name: body.name,
 		number: body.number
 	}
-
+	
+	
 	persons = persons.concat(person)
 	response.json(person)
 })
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)
-	console.log('Exercise 3.5')
+	console.log('Exercise 3.6')
 })
