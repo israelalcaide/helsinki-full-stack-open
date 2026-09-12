@@ -1,0 +1,3 @@
+#required
+node_modules
+.env

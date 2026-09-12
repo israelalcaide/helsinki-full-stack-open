@@ -1,0 +1,16 @@
+{
+  "name": "phonebook-backend",
+  "version": "1.0.0",
+  "description": "Phonebook backend for Full Stack Open Part 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch index.js",
+    "start": "node index.js"
+  },
+  "author": "Israel Alcaide",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
