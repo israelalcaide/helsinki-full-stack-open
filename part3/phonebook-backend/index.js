@@ -1,7 +1,10 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
+
 app.use(express.json())
+app.use(morgan('tiny'))
 
 const PORT = 3001
 
@@ -91,5 +94,5 @@ app.post('/api/persons', (request, response) => {
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)
-	console.log('Exercise 3.6')
+	console.log('Exercise 3.7')
 })
