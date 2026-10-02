@@ -86,26 +86,17 @@ app.post('/api/persons', (request, response) => {
 			{ error: 'Name or Number are missing'})
 	}
 
-	if (persons.some(person => person.name === body.name)) {
-		return response.status(400).json(
-			{ error: 'name must be unique'}
-		)
-	}
-
-	const randomId = String(Math.floor(Math.random() * 10000))
-
-	const person = {
-		id: randomId,
+	const person = new Person({
 		name: body.name,
 		number: body.number
-	}
-	
-	
-	persons = persons.concat(person)
-	response.json(person)
+	})
+
+	person.save().then(savedPerson => {
+		response.json(savedPerson)
+	})
 })
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)
-	console.log('Exercise 3.13')
+	console.log('Exercise 3.14')
 })
